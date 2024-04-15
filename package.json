@@ -1,0 +1,17 @@
+{
+  "name": "refactoring-study",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "format": "prettier --write . --ignore-path .gitignore"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "vitest": "^1.5.0"
+  }
+}
