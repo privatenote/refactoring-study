@@ -9,13 +9,7 @@ export function statement(invoice, plays) {
     const play = plays[perf.playID];
     const thisAmount = getAmount(play.type, perf);
 
-    // 포인트를 적립한다.
-    volumeCredits += Math.max(perf.audience - 30, 0);
-
-    // 희극 관객 5명마다 추가 포인트를 제공한다.
-    if ('comedy' === play.type) {
-      volumeCredits += Math.floor(perf.audience / 5);
-    }
+    volumeCredits += getCredit(play.type, perf);
 
     // 청구 내역을 출력한다.
     result += `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
@@ -52,4 +46,18 @@ const getAmount = (playType, performance) => {
   }
 
   return amount;
+};
+
+const getCredit = (playType, performance) => {
+  let credit = 0;
+
+  // 포인트를 적립한다.
+  credit += Math.max(performance.audience - 30, 0);
+
+  // 희극 관객 5명마다 추가 포인트를 제공한다.
+  if ('comedy' === playType) {
+    credit += Math.floor(performance.audience / 5);
+  }
+
+  return credit;
 };
