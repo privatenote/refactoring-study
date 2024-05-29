@@ -25,6 +25,16 @@ function calcAmountForPerf(perf, playType) {
   return thisAmount;
 }
 
+function calcVolumeCreditForPerf(perf, playType) {
+  let volumeCredits = Math.max(perf.audience - 30, 0);
+
+  // 희극 관객 5명마다 추가 포인트를 제공한다.
+  if ('comedy' === playType) {
+    volumeCredits += Math.floor(perf.audience / 5);
+  }
+  return volumeCredits;
+}
+
 export function statement(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
@@ -37,12 +47,7 @@ export function statement(invoice, plays) {
     const thisAmount = calcAmountForPerf(perf, play.type);
 
     // 포인트를 적립한다.
-    volumeCredits += Math.max(perf.audience - 30, 0);
-
-    // 희극 관객 5명마다 추가 포인트를 제공한다.
-    if ('comedy' === play.type) {
-      volumeCredits += Math.floor(perf.audience / 5);
-    }
+    volumeCredits += calcVolumeCreditForPerf(perf, play.type);
 
     // 청구 내역을 출력한다.
     result += `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
