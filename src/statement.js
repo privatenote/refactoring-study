@@ -47,3 +47,12 @@ export function statement(invoice, plays) {
 
   return result;
 }
+
+const a = (perf) => {
+  thisAmount = 40_000;
+
+  if (perf.audience > 30) {
+    thisAmount += 1_000 * (perf.audience - 30);
+  }
+  return thisAmount
+}
