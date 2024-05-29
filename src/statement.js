@@ -1,7 +1,8 @@
 export function statement(invoice, plays) {
   const { totalAmount, volumeCredits, dataByPerformance } = calculateData(invoice, plays);
 
-  return dataByPerformance + [
+  return [
+    ...dataByPerformance,
     `총액 ${format(totalAmount / 100)}`,
     `적립 포인트 ${volumeCredits}점`
   ].join('\n');
@@ -29,18 +30,18 @@ const calculateData = (invoice, plays) => {
     }
 
     return [
-      `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`,
+      `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석`,
       thisAmount,
       thisVolumeCredits,
     ];
   }).reduce((acc, [data, amount, volumeCredits]) => (
     {
-      dataByPerformance: acc.dataByPerformance + data,
+      dataByPerformance: [...acc.dataByPerformance, data],
       totalAmount: acc.totalAmount + amount,
       volumeCredits: acc.volumeCredits + volumeCredits,
     }
   ), {
-    dataByPerformance: `청구내역 (고객명: ${invoice.customer})\n`,
+    dataByPerformance: [`청구내역 (고객명: ${invoice.customer})`],
     totalAmount: 0,
     volumeCredits: 0,
   });
