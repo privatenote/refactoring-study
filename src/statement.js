@@ -11,11 +11,7 @@ export function statement(invoice, plays) {
 
     switch (play.type) {
       case 'tragedy':
-        thisAmount = 40_000;
-
-        if (perf.audience > 30) {
-          thisAmount += 1_000 * (perf.audience - 30);
-        }
+        thisAmount = a(perf);
         break;
       case 'comedy':
         thisAmount = 30_000;
@@ -49,7 +45,7 @@ export function statement(invoice, plays) {
 }
 
 const a = (perf) => {
-  thisAmount = 40_000;
+  let thisAmount = 40_000;
 
   if (perf.audience > 30) {
     thisAmount += 1_000 * (perf.audience - 30);
