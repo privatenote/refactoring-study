@@ -8,6 +8,7 @@ export function statement(invoice, plays) {
     const result = Object.assign({}, perf);
     result.play = playFor(perf);
     result.amount = amountFor(result);
+    result.volumeCredits = volumeCreditsFor(result);
     return result;
   }
 
@@ -37,6 +38,20 @@ export function statement(invoice, plays) {
 
       default:
         throw new Error(`알 수 없는 장르: ${perf.play.type}`);
+    }
+
+    return result;
+  }
+
+  function volumeCreditsFor(perf) {
+    let result = 0;
+
+    // 포인트를 적립한다.
+    result += Math.max(perf.audience - 30, 0);
+
+    // 희극 관객 5명마다 추가 포인트를 제공한다.
+    if ('comedy' === perf.play.type) {
+      result += Math.floor(perf.audience / 5);
     }
 
     return result;
