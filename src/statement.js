@@ -1,9 +1,9 @@
 export function statement(invoice, plays) {
   const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
 
-  const { totalAmount, volumeCredits, dataByPerformance: result } = calculateData(invoice, plays);
+  const { totalAmount, volumeCredits, dataByPerformance } = calculateData(invoice, plays);
 
-  return result + [
+  return dataByPerformance + [
     `총액 ${format(totalAmount / 100)}`,
     `적립 포인트 ${volumeCredits}점`
   ].join('\n');
@@ -33,7 +33,6 @@ const calculateData = (invoice, plays) => {
         throw new Error(`알 수 없는 장르: ${play.type}`);
     }
 
-    // 청구 내역을 출력한다.
     dataByPerformance += `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
     totalAmount += thisAmount;
   }
