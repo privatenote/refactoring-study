@@ -12,20 +12,14 @@ export function statement(invoice, plays) {
     switch (play.type) {
       case 'tragedy':
         thisAmount = getTragedyAmount(perf);
+        volumeCredits += getTragedyPoints(perf);
         break;
       case 'comedy':
         thisAmount = getComedyAmount(perf);
+        volumeCredits += getComedyPoints(perf);
         break;
       default:
         throw new Error(`알 수 없는 장르: ${play.type}`);
-    }
-
-    // 포인트를 적립한다.
-    volumeCredits += Math.max(perf.audience - 30, 0);
-
-    // 희극 관객 5명마다 추가 포인트를 제공한다.
-    if ('comedy' === play.type) {
-      volumeCredits += Math.floor(perf.audience / 5);
     }
 
     // 청구 내역을 출력한다.
