@@ -9,7 +9,7 @@ export function statement(invoice, plays) {
     const play = playFor(perf);
     const thisAmount = amountFor(perf);
 
-    volumeCredits += volumeCreditsFor(perf, play);
+    volumeCredits += volumeCreditsFor(perf);
 
     // 청구 내역을 출력한다.
     result += `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
@@ -52,7 +52,8 @@ export function statement(invoice, plays) {
     return result;
   }
 
-  function volumeCreditsFor(perf, play) {
+  function volumeCreditsFor(perf) {
+    const play = playFor(perf);
     let result = 0;
 
     // 포인트를 적립한다.
