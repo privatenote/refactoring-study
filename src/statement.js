@@ -45,11 +45,11 @@ class ComedyPlay extends Play {
   }
 }
 
-function createPlayObject(name, type) {
-  if ('tragedy' === type) {
-    return new TragedyPlay(name);
-  } else if ('comedy' === type) {
-    return new ComedyPlay(name);
+function createPlayObject(play) {
+  if ('tragedy' === play.type) {
+    return new TragedyPlay(play.name);
+  } else if ('comedy' === play.type) {
+    return new ComedyPlay(play.name);
   } else {
     throw new Error(`알 수 없는 장르: ${play.type}`);
   }
@@ -67,7 +67,7 @@ export function statement(invoice, plays) {
 
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
-    const playObject = createPlayObject(play.name, play.type);
+    const playObject = createPlayObject(play);
     const thisAmount = playObject.calcAmount(perf);
 
     // 포인트를 적립한다.
