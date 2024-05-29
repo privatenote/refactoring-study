@@ -1,6 +1,4 @@
 export function statement(invoice, plays) {
-  const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
-
   const { totalAmount, volumeCredits, dataByPerformance } = calculateData(invoice, plays);
 
   return dataByPerformance + [
