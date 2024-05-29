@@ -56,6 +56,9 @@ function createPlayObject(play) {
 }
 
 export function statement(invoice, plays) {
+  const amounts = invoice.performances.map((perf) => {
+    const play = createPlayObject(plays[perf.playID]);
+  });
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `청구내역 (고객명: ${invoice.customer})\n`;
