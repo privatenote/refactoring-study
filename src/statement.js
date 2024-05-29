@@ -1,7 +1,7 @@
 export function statement(invoice, plays) {
   const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
 
-  const { totalAmount, volumeCredits, result } = calculateData(invoice, plays);
+  const { totalAmount, volumeCredits, dataByPerformance: result } = calculateData(invoice, plays);
 
   return result + [
     `총액 ${format(totalAmount / 100)}`,
@@ -12,7 +12,8 @@ export function statement(invoice, plays) {
 const calculateData = (invoice, plays) => {
   let totalAmount = 0;
   let volumeCredits = 0;
-  let result = `청구내역 (고객명: ${invoice.customer})\n`;
+  let dataByPerformance = `청구내역 (고객명: ${invoice.customer})\n`;
+
   const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
 
   for (let perf of invoice.performances) {
@@ -33,11 +34,11 @@ const calculateData = (invoice, plays) => {
     }
 
     // 청구 내역을 출력한다.
-    result += `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
+    dataByPerformance += `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
     totalAmount += thisAmount;
   }
 
-  return { totalAmount, volumeCredits, result };
+  return { totalAmount, volumeCredits, dataByPerformance };
 }
 
 const getTragedyAmount = (perf) => {
