@@ -6,6 +6,10 @@ class Play {
   calcAmount(perf) {
     throw new Error('not implemented');
   }
+
+  calcVolumeCredit(perf) {
+    return Math.max(perf.audience - 30, 0);
+  }
 }
 
 class TragedyPlay extends Play {
@@ -35,6 +39,10 @@ class ComedyPlay extends Play {
     amount += 300 * perf.audience;
     return amount;
   }
+
+  calcVolumeCredit(perf) {
+    return super.calcVolumeCredit(perf) + Math.floor(perf.audience / 5);
+  }
 }
 
 function createPlayObject(name, type) {
@@ -45,16 +53,6 @@ function createPlayObject(name, type) {
   } else {
     throw new Error(`알 수 없는 장르: ${play.type}`);
   }
-}
-
-function calcVolumeCreditForPerf(perf, playType) {
-  let volumeCredits = Math.max(perf.audience - 30, 0);
-
-  // 희극 관객 5명마다 추가 포인트를 제공한다.
-  if ('comedy' === playType) {
-    volumeCredits += Math.floor(perf.audience / 5);
-  }
-  return volumeCredits;
 }
 
 export function statement(invoice, plays) {
@@ -73,7 +71,7 @@ export function statement(invoice, plays) {
     const thisAmount = playObject.calcAmount(perf);
 
     // 포인트를 적립한다.
-    volumeCredits += calcVolumeCreditForPerf(perf, play.type);
+    volumeCredits += playObject.calcVolumeCredit(perf);
 
     // 청구 내역을 출력한다.
     result += `${play.name}: ${formatCurrency(thisAmount / 100)} ${perf.audience}석\n`;
