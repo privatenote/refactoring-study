@@ -1,9 +1,19 @@
 export function statement(invoice, plays) {
+  const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
+
+  const { totalAmount, volumeCredits, result } = calculateData(invoice, plays);
+
+  return result + [
+    `총액 ${format(totalAmount / 100)}`,
+    `적립 포인트 ${volumeCredits}점`
+  ].join('\n');
+}
+
+const calculateData = (invoice, plays) => {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `청구내역 (고객명: ${invoice.customer})\n`;
-  const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 })
-    .format;
+  const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
 
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
@@ -26,10 +36,8 @@ export function statement(invoice, plays) {
     result += `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
     totalAmount += thisAmount;
   }
-  result += `총액 ${format(totalAmount / 100)}\n`;
-  result += `적립 포인트 ${volumeCredits}점\n`;
 
-  return result;
+  return { totalAmount, volumeCredits, result };
 }
 
 const getTragedyAmount = (perf) => {
