@@ -6,13 +6,12 @@ export function statement(invoice, plays) {
     .format;
 
   for (let perf of invoice.performances) {
-    const play = playFor(perf);
     const thisAmount = amountFor(perf);
 
     volumeCredits += volumeCreditsFor(perf);
 
     // 청구 내역을 출력한다.
-    result += `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
+    result += `${playFor(perf).name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
     totalAmount += thisAmount;
   }
   result += `총액 ${format(totalAmount / 100)}\n`;
