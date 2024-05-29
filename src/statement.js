@@ -48,40 +48,13 @@ function renderPlainText(data) {
 
   for (let perf of data.performances) {
     // 청구 내역을 출력한다.
-    result += `${perf.play.name}: ${usd(amountFor(perf) / 100)} ${perf.audience}석\n`;
+    result += `${perf.play.name}: ${usd(perf.amount / 100)} ${perf.audience}석\n`;
   }
 
   result += `총액 ${usd(totalAmounts() / 100)}\n`;
   result += `적립 포인트 ${totalVolumeCredits()}점\n`;
 
   return result;
-
-  function amountFor(perf) {
-    let result = 0;
-
-    switch (perf.play.type) {
-      case 'tragedy':
-        result = 40_000;
-
-        if (perf.audience > 30) {
-          result += 1_000 * (perf.audience - 30);
-        }
-        break;
-      case 'comedy':
-        result = 30_000;
-
-        if (perf.audience > 20) {
-          result += 10_000 + 500 * (perf.audience - 20);
-        }
-        result += 300 * perf.audience;
-        break;
-
-      default:
-        throw new Error(`알 수 없는 장르: ${perf.play.type}`);
-    }
-
-    return result;
-  }
 
   function volumeCreditsFor(perf) {
     let result = 0;
@@ -115,7 +88,7 @@ function renderPlainText(data) {
   function totalAmounts() {
     let result = 0;
     for (let perf of data.performances) {
-      result += amountFor(perf);
+      result += perf.amount;
     }
 
     return result;
