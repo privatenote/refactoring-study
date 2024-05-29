@@ -6,7 +6,12 @@ export function statement(invoice, plays) {
 
   function enrichPerformance(perf) {
     const result = Object.assign({}, perf);
+    result.play = playFor(perf);
     return result;
+  }
+
+  function playFor(perf) {
+    return plays[perf.playID];
   }
 }
 
