@@ -14,14 +14,8 @@ export function statement(invoice, plays) {
         thisAmount = getTragedyAmount(perf);
         break;
       case 'comedy':
-        thisAmount = 30_000;
-
-        if (perf.audience > 20) {
-          thisAmount += 10_000 + 500 * (perf.audience - 20);
-        }
-        thisAmount += 300 * perf.audience;
+        thisAmount = getComedyAmount(perf);
         break;
-
       default:
         throw new Error(`알 수 없는 장르: ${play.type}`);
     }
@@ -51,4 +45,14 @@ const getTragedyAmount = (perf) => {
     thisAmount += 1_000 * (perf.audience - 30);
   }
   return thisAmount
+}
+
+const getComedyAmount = (perf) => {
+  let thisAmount = 30_000;
+
+  if (perf.audience > 20) {
+    thisAmount += 10_000 + 500 * (perf.audience - 20);
+  }
+  thisAmount += 300 * perf.audience;
+  return thisAmount;
 }
