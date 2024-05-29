@@ -10,20 +10,19 @@ export function statement(invoice, plays) {
 const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
 
 const calculateData = (invoice, plays) => {
-  let volumeCredits = 0;
-
-  const { totalAmount, dataByPerformance } = invoice.performances.map((perf) => {
+  const { totalAmount, dataByPerformance, volumeCredits } = invoice.performances.map((perf) => {
     const play = plays[perf.playID];
     let thisAmount = 0;
+    let thisVolumeCredits = 0;
 
     switch (play.type) {
       case 'tragedy':
         thisAmount = getTragedyAmount(perf);
-        volumeCredits += getTragedyPoints(perf);
+        thisVolumeCredits = getTragedyPoints(perf);
         break;
       case 'comedy':
         thisAmount = getComedyAmount(perf);
-        volumeCredits += getComedyPoints(perf);
+        thisVolumeCredits = getComedyPoints(perf);
         break;
       default:
         throw new Error(`알 수 없는 장르: ${play.type}`);
@@ -31,16 +30,19 @@ const calculateData = (invoice, plays) => {
 
     return [
       `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`,
-      thisAmount
+      thisAmount,
+      thisVolumeCredits,
     ];
-  }).reduce((acc, [data, amount]) => (
+  }).reduce((acc, [data, amount, volumeCredits]) => (
     {
       dataByPerformance: acc.dataByPerformance + data,
       totalAmount: acc.totalAmount + amount,
+      volumeCredits: acc.volumeCredits + volumeCredits,
     }
   ), {
     dataByPerformance: `청구내역 (고객명: ${invoice.customer})\n`,
     totalAmount: 0,
+    volumeCredits: 0,
   });
 
   return { totalAmount, volumeCredits, dataByPerformance };
