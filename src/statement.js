@@ -86,8 +86,8 @@ function renderPlainText(data) {
     result += `${perf.play.name}: ${usd(perf.amount / 100)} ${perf.audience}석\n`;
   }
 
-  result += `총액 ${usd(totalAmount() / 100)}\n`;
-  result += `적립 포인트 ${totalVolumeCredits()}점\n`;
+  result += `총액 ${usd(data.totalAmount / 100)}\n`;
+  result += `적립 포인트 ${data.totalVolumeCredits}점\n`;
 
   return result;
 
@@ -95,23 +95,5 @@ function renderPlainText(data) {
     const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 })
       .format;
     return formatter(amount);
-  }
-
-  function totalVolumeCredits() {
-    let result = 0;
-    for (let perf of data.performances) {
-      result += perf.volumeCredits;
-    }
-
-    return result;
-  }
-
-  function totalAmount() {
-    let result = 0;
-    for (let perf of data.performances) {
-      result += perf.amount;
-    }
-
-    return result;
   }
 }
