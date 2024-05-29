@@ -7,28 +7,7 @@ export function statement(invoice, plays) {
 
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
-    let thisAmount = 0;
-
-    switch (play.type) {
-      case 'tragedy':
-        thisAmount = 40_000;
-
-        if (perf.audience > 30) {
-          thisAmount += 1_000 * (perf.audience - 30);
-        }
-        break;
-      case 'comedy':
-        thisAmount = 30_000;
-
-        if (perf.audience > 20) {
-          thisAmount += 10_000 + 500 * (perf.audience - 20);
-        }
-        thisAmount += 300 * perf.audience;
-        break;
-
-      default:
-        throw new Error(`알 수 없는 장르: ${play.type}`);
-    }
+    const thisAmount = getAmount(play.type, perf);
 
     // 포인트를 적립한다.
     volumeCredits += Math.max(perf.audience - 30, 0);
@@ -47,3 +26,30 @@ export function statement(invoice, plays) {
 
   return result;
 }
+
+const getAmount = (playType, performance) => {
+  let amount;
+
+  switch (playType) {
+    case 'tragedy':
+      amount = 40_000;
+
+      if (performance.audience > 30) {
+        amount += 1_000 * (performance.audience - 30);
+      }
+      break;
+    case 'comedy':
+      amount = 30_000;
+
+      if (performance.audience > 20) {
+        amount += 10_000 + 500 * (performance.audience - 20);
+      }
+      amount += 300 * performance.audience;
+      break;
+
+    default:
+      throw new Error(`알 수 없는 장르: ${playType}`);
+  }
+
+  return amount;
+};
