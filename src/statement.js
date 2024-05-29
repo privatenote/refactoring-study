@@ -76,11 +76,11 @@ export function statement(invoice, plays) {
   }
 
   function totalAmounts() {
-    let totalAmount = 0;
+    let result = 0;
     for (let perf of invoice.performances) {
-      totalAmount += amountFor(perf);
+      result += amountFor(perf);
     }
 
-    return totalAmount;
+    return result;
   }
 }
