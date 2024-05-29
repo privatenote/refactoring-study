@@ -7,14 +7,12 @@ export function statement(invoice, plays) {
   ].join('\n');
 }
 
+const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
+
 const calculateData = (invoice, plays) => {
-  let totalAmount = 0;
   let volumeCredits = 0;
-  let dataByPerformance = `청구내역 (고객명: ${invoice.customer})\n`;
 
-  const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
-
-  for (let perf of invoice.performances) {
+  const { totalAmount, dataByPerformance } = invoice.performances.map((perf) => {
     const play = plays[perf.playID];
     let thisAmount = 0;
 
@@ -31,9 +29,19 @@ const calculateData = (invoice, plays) => {
         throw new Error(`알 수 없는 장르: ${play.type}`);
     }
 
-    dataByPerformance += `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`;
-    totalAmount += thisAmount;
-  }
+    return [
+      `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석\n`,
+      thisAmount
+    ];
+  }).reduce((acc, [data, amount]) => (
+    {
+      dataByPerformance: acc.dataByPerformance + data,
+      totalAmount: acc.totalAmount + amount,
+    }
+  ), {
+    dataByPerformance: `청구내역 (고객명: ${invoice.customer})\n`,
+    totalAmount: 0,
+  });
 
   return { totalAmount, volumeCredits, dataByPerformance };
 }
