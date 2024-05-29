@@ -7,11 +7,39 @@ export function statement(invoice, plays) {
   function enrichPerformance(perf) {
     const result = Object.assign({}, perf);
     result.play = playFor(perf);
+    result.amount = amountFor(result);
     return result;
   }
 
   function playFor(perf) {
     return plays[perf.playID];
+  }
+
+  function amountFor(perf) {
+    let result = 0;
+
+    switch (perf.play.type) {
+      case 'tragedy':
+        result = 40_000;
+
+        if (perf.audience > 30) {
+          result += 1_000 * (perf.audience - 30);
+        }
+        break;
+      case 'comedy':
+        result = 30_000;
+
+        if (perf.audience > 20) {
+          result += 10_000 + 500 * (perf.audience - 20);
+        }
+        result += 300 * perf.audience;
+        break;
+
+      default:
+        throw new Error(`알 수 없는 장르: ${perf.play.type}`);
+    }
+
+    return result;
   }
 }
 
