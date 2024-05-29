@@ -20,7 +20,7 @@ function renderPlainText(data, plays) {
 
   for (let perf of data.performances) {
     // 청구 내역을 출력한다.
-    result += `${playFor(perf).name}: ${usd(amountFor(perf) / 100)} ${perf.audience}석\n`;
+    result += `${perf.play.name}: ${usd(amountFor(perf) / 100)} ${perf.audience}석\n`;
   }
 
   result += `총액 ${usd(totalAmounts() / 100)}\n`;
@@ -28,15 +28,10 @@ function renderPlainText(data, plays) {
 
   return result;
 
-  function playFor(perf) {
-    return plays[perf.playID];
-  }
-
   function amountFor(perf) {
-    const play = playFor(perf);
     let result = 0;
 
-    switch (play.type) {
+    switch (perf.play.type) {
       case 'tragedy':
         result = 40_000;
 
@@ -54,21 +49,20 @@ function renderPlainText(data, plays) {
         break;
 
       default:
-        throw new Error(`알 수 없는 장르: ${play.type}`);
+        throw new Error(`알 수 없는 장르: ${perf.play.type}`);
     }
 
     return result;
   }
 
   function volumeCreditsFor(perf) {
-    const play = playFor(perf);
     let result = 0;
 
     // 포인트를 적립한다.
     result += Math.max(perf.audience - 30, 0);
 
     // 희극 관객 5명마다 추가 포인트를 제공한다.
-    if ('comedy' === play.type) {
+    if ('comedy' === perf.play.type) {
       result += Math.floor(perf.audience / 5);
     }
 
