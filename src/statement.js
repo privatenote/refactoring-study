@@ -56,3 +56,7 @@ const getComedyAmount = (perf) => {
   thisAmount += 300 * perf.audience;
   return thisAmount;
 }
+
+const getTragedyPoint = (perf) => {
+  volumeCredits += Math.max(perf.audience - 30, 0);
+}
