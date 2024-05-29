@@ -10,10 +10,7 @@ export function statement(invoice, plays) {
     totalAmount += thisAmount;
   }
 
-  let volumeCredits = 0;
-  for (let perf of invoice.performances) {
-    volumeCredits += volumeCreditsFor(perf);
-  }
+  const volumeCredits = totalVolumeCredits();
 
   result += `총액 ${usd(totalAmount / 100)}\n`;
   result += `적립 포인트 ${volumeCredits}점\n`;
@@ -71,5 +68,14 @@ export function statement(invoice, plays) {
     const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 })
       .format;
     return formatter(amount);
+  }
+
+  function totalVolumeCredits() {
+    let volumeCredits = 0;
+    for (let perf of invoice.performances) {
+      volumeCredits += volumeCreditsFor(perf);
+    }
+
+    return volumeCredits;
   }
 }
