@@ -101,11 +101,6 @@ describe('statement 함수 테스트', () => {
       {
         customer: 'PrivateNote',
         performances: [
-          { playID: 'hamlet', audience: 55 },
-          { playID: 'as-like', audience: 35 },
-          { playID: 'othello', audience: 40 },
-        ],
-        performances: [
           { playID: 'math', audience: 55 },
           { playID: 'physics', audience: 35 },
           { playID: 'kmo', audience: 40 },
