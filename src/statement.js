@@ -1,28 +1,50 @@
-function calcAmountForPerf(perf, playType) {
-  let thisAmount = 0;
-
-  switch (playType) {
-    case 'tragedy':
-      thisAmount = 40_000;
-
-      if (perf.audience > 30) {
-        thisAmount += 1_000 * (perf.audience - 30);
-      }
-      break;
-    case 'comedy':
-      thisAmount = 30_000;
-
-      if (perf.audience > 20) {
-        thisAmount += 10_000 + 500 * (perf.audience - 20);
-      }
-      thisAmount += 300 * perf.audience;
-      break;
-
-    default:
-      throw new Error(`알 수 없는 장르: ${play.type}`);
+class Play {
+  constructor(name) {
+    this.name = name;
   }
 
-  return thisAmount;
+  calcAmount(perf) {
+    throw new Error('not implemented');
+  }
+}
+
+class TragedyPlay extends Play {
+  constructor(name) {
+    super(name);
+  }
+
+  calcAmount(perf) {
+    let amount = 40_000;
+    if (perf.audience > 30) {
+      amount += 1_000 * (perf.audience - 30);
+    }
+    return amount;
+  }
+}
+
+class ComedyPlay extends Play {
+  constructor(name) {
+    super(name);
+  }
+
+  calcAmount(perf) {
+    let amount = 30_000;
+    if (perf.audience > 20) {
+      amount += 10_000 + 500 * (perf.audience - 20);
+    }
+    amount += 300 * perf.audience;
+    return amount;
+  }
+}
+
+function createPlayObject(name, type) {
+  if ('tragedy' === type) {
+    return new TragedyPlay(name);
+  } else if ('comedy' === type) {
+    return new ComedyPlay(name);
+  } else {
+    throw new Error(`알 수 없는 장르: ${play.type}`);
+  }
 }
 
 function calcVolumeCreditForPerf(perf, playType) {
@@ -47,7 +69,8 @@ export function statement(invoice, plays) {
 
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
-    const thisAmount = calcAmountForPerf(perf, play.type);
+    const playObject = createPlayObject(play.name, play.type);
+    const thisAmount = playObject.calcAmount(perf);
 
     // 포인트를 적립한다.
     volumeCredits += calcVolumeCreditForPerf(perf, play.type);
