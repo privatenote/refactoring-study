@@ -10,44 +10,40 @@ export function statement(invoice, plays) {
 
 const format = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format;
 
-const calculateData = (invoice, plays) => {
-  const { totalAmount, dataByPerformance, volumeCredits } = invoice.performances.map((perf) => {
-    const play = plays[perf.playID];
-    let thisAmount = 0;
-    let thisVolumeCredits = 0;
+const calculateData = (invoice, plays) => invoice.performances.map((perf) => {
+  const play = plays[perf.playID];
+  let thisAmount = 0;
+  let thisVolumeCredits = 0;
 
-    switch (play.type) {
-      case 'tragedy':
-        thisAmount = getTragedyAmount(perf);
-        thisVolumeCredits = getTragedyPoints(perf);
-        break;
-      case 'comedy':
-        thisAmount = getComedyAmount(perf);
-        thisVolumeCredits = getComedyPoints(perf);
-        break;
-      default:
-        throw new Error(`알 수 없는 장르: ${play.type}`);
-    }
+  switch (play.type) {
+    case 'tragedy':
+      thisAmount = getTragedyAmount(perf);
+      thisVolumeCredits = getTragedyPoints(perf);
+      break;
+    case 'comedy':
+      thisAmount = getComedyAmount(perf);
+      thisVolumeCredits = getComedyPoints(perf);
+      break;
+    default:
+      throw new Error(`알 수 없는 장르: ${play.type}`);
+  }
 
-    return [
-      `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석`,
-      thisAmount,
-      thisVolumeCredits,
-    ];
-  }).reduce((acc, [data, amount, volumeCredits]) => (
-    {
-      dataByPerformance: [...acc.dataByPerformance, data],
-      totalAmount: acc.totalAmount + amount,
-      volumeCredits: acc.volumeCredits + volumeCredits,
-    }
-  ), {
-    dataByPerformance: [`청구내역 (고객명: ${invoice.customer})`],
-    totalAmount: 0,
-    volumeCredits: 0,
-  });
-
-  return { totalAmount, volumeCredits, dataByPerformance };
-}
+  return [
+    `${play.name}: ${format(thisAmount / 100)} ${perf.audience}석`,
+    thisAmount,
+    thisVolumeCredits,
+  ];
+}).reduce((acc, [data, amount, volumeCredits]) => (
+  {
+    dataByPerformance: [...acc.dataByPerformance, data],
+    totalAmount: acc.totalAmount + amount,
+    volumeCredits: acc.volumeCredits + volumeCredits,
+  }
+), {
+  dataByPerformance: [`청구내역 (고객명: ${invoice.customer})`],
+  totalAmount: 0,
+  volumeCredits: 0,
+});
 
 const getTragedyAmount = (perf) => {
   let thisAmount = 40_000;
